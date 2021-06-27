@@ -1,0 +1,10 @@
+.non-tax-min {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+}
+
+.non-tax-min-label {
+  font-size: 18px;
+}
