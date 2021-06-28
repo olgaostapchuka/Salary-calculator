@@ -1,0 +1,14 @@
+.salary__type {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  font-size: 18px;
+}
+.salary__type-label {
+  font-size: 18px;
+}
+
+/* .hidden {
+    display: none;
+  } */
