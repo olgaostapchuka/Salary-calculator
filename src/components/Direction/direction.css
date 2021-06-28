@@ -1,0 +1,11 @@
+.direction {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: #f6f6f6;
+}
+
+.direction-label {
+  font-size: 18px;
+}
