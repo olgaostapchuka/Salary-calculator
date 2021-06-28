@@ -1,0 +1,14 @@
+.app {
+  margin: 0 auto;
+  max-width: 1100px;
+  padding: 10px;
+}
+
+.calculator {
+  display: flex;
+  justify-content: space-between;
+}
+
+.calculator > div {
+  width: 49%;
+}
