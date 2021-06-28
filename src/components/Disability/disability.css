@@ -1,0 +1,13 @@
+.disability {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+}
+
+.disability-label {
+  font-size: 18px;
+}
+.disability-select {
+  min-width: 140px;
+}
