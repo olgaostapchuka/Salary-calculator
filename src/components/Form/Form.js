@@ -16,7 +16,6 @@ const Form = () => {
     <div className="form-container">
       <Direction />
       <SalaryType />
-      <MonthSalary />
       <TaxBook />
       <Dependents />
       <NonTaxMin />
