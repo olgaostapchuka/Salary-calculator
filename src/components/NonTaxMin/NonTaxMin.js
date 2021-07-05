@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./nontaxmin.css";
-import "antd/dist/antd.css";
 import { InputNumber } from "antd";
+import { DataContext } from "../../providers/CalculatorProvider";
 
 const NonTaxMin = () => {
+  const { nonTaxMin, setNonTaxMin } = useContext(DataContext);
   return (
     <div className="non-tax-min">
       <label className="non-tax-min-label" htmlFor="nonTaxMinInput">
@@ -11,9 +12,11 @@ const NonTaxMin = () => {
       </label>
       <InputNumber
         id="nonTaxMinInput"
-        min={1}
-        max={10000}
-        defaultValue={null}
+        min={0.01}
+        max={100000}
+        defaultValue={nonTaxMin}
+        onChange={setNonTaxMin}
+        step="0.01"
       />
     </div>
   );
