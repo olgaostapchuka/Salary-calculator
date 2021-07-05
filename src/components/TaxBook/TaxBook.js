@@ -1,13 +1,21 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./taxbook.css";
-import "antd/dist/antd.css";
 import { Checkbox } from "antd";
+import { DataContext } from "../../providers/CalculatorProvider";
 
 const TaxBook = () => {
+  const { setTaxBook } = useContext(DataContext);
+
+  const enableTaxBook = (value) => {
+    setTaxBook((value) => !value);
+  };
+
   return (
     <div className="taxbook">
-      <Checkbox />
-      <label className="taxbook-label">Employer has your tax book</label>
+      <Checkbox defaultChecked={true} onChange={enableTaxBook} id="TaxBook" />
+      <label className="taxbook-label" htmlFor="TaxBook">
+        Employer has your tax book
+      </label>
     </div>
   );
 };
