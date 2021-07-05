@@ -1,18 +1,30 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./Pension.css";
-import "antd/dist/antd.css";
 import { Select } from "antd";
+import { DataContext } from "../../providers/CalculatorProvider";
 const { Option } = Select;
 
 const Pension = () => {
+  const { setPension } = useContext(DataContext);
+
+  function onChangePension(value) {
+    setPension(value);
+  }
+
   return (
     <div className="pension">
       <label className="pension-label" htmlFor="PensionSelect">
         Pension
       </label>
        
-      <Select id="PensionSelect" defaultValue="not" className="pension-select">
-        <Option value="beneficiary">beneficiary of a retirement pension</Option>
+      <Select
+        id="PensionSelect"
+        defaultValue="not"
+        onChange={onChangePension}
+        className="pension-select"
+      >
+        <Option value="not">not</Option>
+        <Option value="benef">beneficiary of a retirement pension</Option>
         <Option value="national">national retirement pensioner</Option>
       </Select>
     </div>
