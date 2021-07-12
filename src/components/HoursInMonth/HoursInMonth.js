@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./hoursinmonth.css";
-import "antd/dist/antd.css";
 import { InputNumber } from "antd";
+import { DataContext } from "../../providers/CalculatorProvider";
 
 const HoursInMonth = () => {
+  const { hoursInMonth, setHoursInMonth } = useContext(DataContext);
+
   return (
     <div className="hours-in-month">
       <label className="hours-in-month-label" htmlFor="hoursInMonthInput">
@@ -13,7 +15,8 @@ const HoursInMonth = () => {
         id="hoursInMonthInput"
         min={1}
         max={10000}
-        defaultValue={null}
+        defaultValue={hoursInMonth}
+        onChange={setHoursInMonth}
       />
     </div>
   );
