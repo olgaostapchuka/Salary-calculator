@@ -1,21 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import "./salarytype.css";
-import "antd/dist/antd.css";
 import Rate from "../Rate";
 import MonthSalary from "../MonthSalary";
 import HoursInMonth from "../HoursInMonth";
 import { Select } from "antd";
+import { DataContext } from "../../providers/CalculatorProvider";
 const { Option } = Select;
 
 const SalaryType = () => {
-  const [isHidden, setActive] = useState(true);
+  const { salaryTypeMonthly, setSalaryTypeMonthly } = useContext(DataContext);
 
-  const ToggleClass = (value) => {
-    if (value === "hourlyRate") {
-      setActive(false);
-    } else {
-      setActive(true);
-    }
+  const salaryTypeMode = (value) => {
+    setSalaryTypeMonthly((value) => !value);
   };
 
   return (
@@ -26,18 +22,18 @@ const SalaryType = () => {
         </label>
         <Select
           id="SalaryTypeSelect"
-          onChange={ToggleClass}
+          onChange={salaryTypeMode}
           defaultValue="monthlySalary"
         >
           <Option value="monthlySalary">monthly salary</Option>
           <Option value="hourlyRate">hourly rate</Option>
         </Select>
       </div>
-      <div className={isHidden ? "hidden" : "shown"}>
+      <div className={salaryTypeMonthly ? "hidden" : "shown"}>
         <Rate />
         <HoursInMonth />
       </div>
-      <div className={!isHidden ? "hidden" : "shown"}>
+      <div className={!salaryTypeMonthly ? "hidden" : "shown"}>
         <MonthSalary />
       </div>
     </>
