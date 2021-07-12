@@ -1,18 +1,24 @@
 import React from "react";
+
 import AppHeader from "../AppHeader";
 import Form from "../Form";
-import Result from "../Result";
+import ResultNet from "../ResultNet";
+import ResultGross from "../ResultGross";
 import "./app.css";
+import { DataProvider } from "../../providers/CalculatorProvider";
 
 const App = () => {
   return (
-    <div className="app">
-      <AppHeader />
-      <div className="calculator">
-        <Form />
-        <Result />
+    <DataProvider>
+      <div className="app">
+        <AppHeader />
+        <div className="calculator">
+          <Form />
+          <ResultNet />
+          <ResultGross />
+        </div>
       </div>
-    </div>
+    </DataProvider>
   );
 };
 
