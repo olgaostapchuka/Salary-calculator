@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./MonthSalary.css";
-import "antd/dist/antd.css";
+import { DataContext } from "../../providers/CalculatorProvider";
 import { InputNumber } from "antd";
 
 const MonthSalary = () => {
+  const { monthSalary, setMonthSalary } = useContext(DataContext);
+
   return (
     <div className="month-salary">
       <label className="month-salary-label" htmlFor="monthSalaryInput">
@@ -11,9 +13,11 @@ const MonthSalary = () => {
       </label>
       <InputNumber
         id="monthSalaryInput"
-        min={1}
+        min={0.1}
         max={10000}
-        defaultValue={null}
+        defaultValue={monthSalary}
+        onChange={setMonthSalary}
+        step="0.01"
       />
     </div>
   );
