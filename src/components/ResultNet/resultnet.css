@@ -1,0 +1,35 @@
+.result-section {
+  min-width: 400px;
+  background: #fff;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  border-radius: 3px;
+}
+.result-section-title {
+  font-size: 28px;
+  padding-left: 3px;
+}
+
+.table-result {
+  border-collapse: collapse;
+  font-size: 18px;
+}
+
+.row-result {
+  font-size: 22px;
+  color: #0f4367;
+  font-weight: bold;
+  background: #f6f6f6;
+}
+.row-result-eur {
+  text-align: end;
+}
+
+tbody {
+  display: table-row-group;
+  vertical-align: middle;
+}
+td,
+th {
+  border: 1px solid #ddd;
+}
