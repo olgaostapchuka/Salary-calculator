@@ -14,7 +14,7 @@ const Rate = () => {
       <InputNumber
         id="RateInput"
         min={1}
-        max={10000}
+        max={73}
         defaultValue={hourlyRate}
         onChange={setHourlyRate}
       />
