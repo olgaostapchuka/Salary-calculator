@@ -3,7 +3,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px;
-  background: #f6f6f6;
+  background: #f0f0f3;
+  box-shadow: -10px -10px 24px rgba(255, 255, 255, 0.6),
+    10px 10px 24px rgba(174, 174, 192, 0.2);
 }
 
 .pension-label {
@@ -11,5 +13,5 @@
 }
 
 .pension-select {
-  width: 250px;
+  width: 260px;
 }

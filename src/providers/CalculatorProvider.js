@@ -3,43 +3,23 @@ import React from "react";
 
 import {
   getSocialTax,
-  getSocialTaxPensionBenef,
-  getSocialTaxPensionNational,
+  getSocialTaxName,
   getIncomeTax,
-  getIncomeTaxBenef,
-  getIncomeTaxNational,
-  getIncomeTaxDisabilityFirst,
+  getIncomeTaxName,
+  getIncomeTaxAfter1667eur,
+  getIncomeTaxTill1667eur,
+  getPartAfter1667eur,
   getSocialEmployerTax,
   getNonTaxForDependents,
   getTotalExpenses,
-  getTotalExpensesBenef,
-  getTotalExpensesNational,
   getNetSalary,
-  getNetSalaryBenef,
-  getNetSalaryNational,
-  getNetSalaryDisabilityFirst,
-  getNetSalaryDisabilityThird,
-  getNetSalaryBenefDisFirst,
-  getIncomeTaxDisabilityThird,
-  getIncomeTaxBenefPensDisFirst,
-  getNoTaxBookNetSalaryBenef,
-  getNoTaxBookNetSalaryNational,
+  getHourlyRateSalary,
   getGrossSalary,
   getSocialTaxGross,
   getIncomeTaxGross,
-  getSocEmployerTaxBenef,
-  getSocEmployerTaxNational,
-  getNoTaxBookIncomeTax,
-  getNoTaxBookIncomeTaxBenef,
-  getNoTaxBookIncomeTaxNational,
-  getNetSalaryNoTaxBook,
+  getIncomeTaxNameGross,
   getSocialEmployerTaxGross,
   getTotalExpensesGross,
-  getSocialTaxHourlyRateNet,
-  getIncomeTaxHourlyRateNet,
-  getNetSalaryHourlyRate,
-  getNetSocEmployerTaxHourlyRate,
-  getNetTotalExpensesHourlyRate,
 } from "../helpers";
 
 const DEFAULT_VALUE = {
@@ -47,9 +27,8 @@ const DEFAULT_VALUE = {
   salaryTypeMonthly: true,
   pension: "not",
   monthSalary: 1000,
-  hourlyRate: 0,
-  hoursInMonth: 0,
-  isActive: true,
+  hourlyRate: 10,
+  hoursInMonth: 40,
   disability: "not",
   dependentsNumber: "",
   nonTaxMin: "",
@@ -68,7 +47,6 @@ export const DataProvider = ({ children }) => {
     DEFAULT_VALUE.direction
   );
   const [monthSalary, setMonthSalary] = useState(DEFAULT_VALUE.monthSalary);
-  const [isActive, setActive] = useState(DEFAULT_VALUE.isActive);
   const [dependentsNumber, setDependentsNumber] = useState(
     DEFAULT_VALUE.dependentsNumber
   );
@@ -76,166 +54,106 @@ export const DataProvider = ({ children }) => {
   const [hourlyRate, setHourlyRate] = useState(DEFAULT_VALUE.hourlyRate);
   const [hoursInMonth, setHoursInMonth] = useState(DEFAULT_VALUE.hoursInMonth);
 
-  const socialTax = getSocialTax(monthSalary);
-  const socialTaxPensionBenef = getSocialTaxPensionBenef(monthSalary);
-  const socialTaxPensionNational = getSocialTaxPensionNational(monthSalary);
-  const socialEmployerTax = getSocialEmployerTax(monthSalary);
-  const socEmployerTaxBenef = getSocEmployerTaxBenef(monthSalary);
-  const socEmployerTaxNational = getSocEmployerTaxNational(monthSalary);
+  const socialTax = getSocialTax(
+    monthSalary,
+    hourlyRate,
+    hoursInMonth,
+    pension,
+    salaryTypeMonthly
+  );
+
+  const socialTaxName = getSocialTaxName(pension);
+  const socialEmployerTax = getSocialEmployerTax(
+    monthSalary,
+    pension,
+    salaryTypeMonthly,
+    hourlyRate,
+    hoursInMonth
+  );
+
   const nonTaxForDependents = getNonTaxForDependents(dependentsNumber);
+
   const incomeTax = getIncomeTax(
     monthSalary,
     socialTax,
     nonTaxForDependents,
-    nonTaxMin
+    nonTaxMin,
+    taxBook,
+    disability,
+    personStatus,
+    salaryTypeMonthly,
+    hourlyRate,
+    hoursInMonth,
+    setSalaryTypeMonthly
   );
 
-  const incomeTaxBenef = getIncomeTaxBenef(
+  const partAfter1667eur = getPartAfter1667eur(
     monthSalary,
-    socialTaxPensionBenef,
-    nonTaxForDependents,
-    nonTaxMin
+    hourlyRate,
+    hoursInMonth,
+    salaryTypeMonthly
   );
-  const noTaxBookIncomeTax = getNoTaxBookIncomeTax(monthSalary, socialTax);
-  const noTaxBookIncomeTaxBenef = getNoTaxBookIncomeTaxBenef(
-    monthSalary,
-    socialTaxPensionBenef
-  );
-
-  const noTaxBookIncomeTaxNational = getNoTaxBookIncomeTaxNational(
-    monthSalary,
-    socialTaxPensionNational
-  );
-
-  const incomeTaxNational = getIncomeTaxNational(
-    monthSalary,
-    socialTaxPensionNational,
-    nonTaxForDependents,
-    nonTaxMin
-  );
-
-  const incomeTaxDisabilityFirst = getIncomeTaxDisabilityFirst(
-    monthSalary,
+  const incomeTaxAfter1667eur = getIncomeTaxAfter1667eur(partAfter1667eur);
+  const incomeTaxTill1667eur = getIncomeTaxTill1667eur(
     socialTax,
     nonTaxForDependents,
-    nonTaxMin
+    nonTaxMin,
+    disability
   );
 
-  const incomeTaxDisabilityThird = getIncomeTaxDisabilityThird(
+  const incomeTaxName = getIncomeTaxName(
     monthSalary,
+    taxBook,
     socialTax,
-    nonTaxForDependents,
-    nonTaxMin
+    salaryTypeMonthly,
+    hourlyRate,
+    hoursInMonth
   );
 
-  const incomeTaxBenefPensDisFirst = getIncomeTaxBenefPensDisFirst(
+  const totalExpenses = getTotalExpenses(
     monthSalary,
-    socialTaxPensionBenef,
-    nonTaxForDependents,
-    nonTaxMin
-  );
-  const totalExpenses = getTotalExpenses(monthSalary, socialEmployerTax);
-  const totalExpensesBenef = getTotalExpensesBenef(
-    monthSalary,
-    socEmployerTaxBenef
+    socialEmployerTax,
+    salaryTypeMonthly,
+    hoursInMonth,
+    hourlyRate
   );
 
-  const totalExpensesNational = getTotalExpensesNational(
+  const netSalary = getNetSalary(
     monthSalary,
-    socEmployerTaxNational
+    incomeTax,
+    socialTax,
+    salaryTypeMonthly,
+    incomeTaxTill1667eur,
+    incomeTaxAfter1667eur,
+    hourlyRate,
+    hoursInMonth
   );
 
-  const netSalary = getNetSalary(monthSalary, incomeTax, socialTax);
-  const netSalaryNoTaxBook = getNetSalaryNoTaxBook(
-    monthSalary,
-    noTaxBookIncomeTax,
-    socialTax
-  );
+  const hourlyRateSalary = getHourlyRateSalary(hourlyRate, hoursInMonth);
 
-  const netSalaryBenef = getNetSalaryBenef(
-    monthSalary,
-    incomeTaxBenef,
-    socialTaxPensionBenef
-  );
-
-  const netSalaryNational = getNetSalaryNational(
-    monthSalary,
-    incomeTaxNational,
-    socialTaxPensionNational
-  );
-
-  const netSalaryDisabilityFirst = getNetSalaryDisabilityFirst(
-    monthSalary,
-    incomeTaxDisabilityFirst,
-    socialTax
-  );
-
-  const netSalaryDisabilityThird = getNetSalaryDisabilityThird(
-    monthSalary,
-    incomeTaxDisabilityThird,
-    socialTax
-  );
-
-  const netSalaryBenefDisFirst = getNetSalaryBenefDisFirst(
-    monthSalary,
-    incomeTaxBenefPensDisFirst,
-    socialTaxPensionBenef
-  );
-
-  const noTaxBookNetSalaryBenef = getNoTaxBookNetSalaryBenef(
-    monthSalary,
-    noTaxBookIncomeTaxBenef,
-    socialTaxPensionBenef
-  );
-  const noTaxBookNetSalaryNational = getNoTaxBookNetSalaryNational(
-    monthSalary,
-    noTaxBookIncomeTaxNational,
-    socialTaxPensionNational
-  );
-
-  const grossSalary = getGrossSalary(monthSalary);
-  const socialTaxGross = getSocialTaxGross(grossSalary);
+  const grossSalary = getGrossSalary(monthSalary, pension);
+  const socialTaxGross = getSocialTaxGross(grossSalary, pension);
   const incomeTaxGross = getIncomeTaxGross(
     grossSalary,
     socialTaxGross,
     nonTaxForDependents,
-    nonTaxMin
+    nonTaxMin,
+    taxBook,
+    pension
   );
-  const socialEmployerTaxGross = getSocialEmployerTaxGross(grossSalary);
+  const incomeTaxNameGross = getIncomeTaxNameGross(
+    grossSalary,
+    taxBook,
+    socialTaxGross
+  );
+  const socialEmployerTaxGross = getSocialEmployerTaxGross(
+    grossSalary,
+    pension
+  );
+
   const totalExpensesGross = getTotalExpensesGross(
     grossSalary,
     socialEmployerTaxGross
-  );
-
-  const socialTaxHourlyRateNet = getSocialTaxHourlyRateNet(
-    hourlyRate,
-    hoursInMonth
-  );
-
-  const incomeTaxHourlyRateNet = getIncomeTaxHourlyRateNet(
-    hourlyRate,
-    hoursInMonth,
-    socialTaxHourlyRateNet,
-    nonTaxForDependents,
-    nonTaxMin
-  );
-
-  const netSalaryHourlyRate = getNetSalaryHourlyRate(
-    hourlyRate,
-    hoursInMonth,
-    incomeTaxHourlyRateNet,
-    socialTaxHourlyRateNet
-  );
-
-  const netSocEmployerTaxHourlyRate = getNetSocEmployerTaxHourlyRate(
-    hourlyRate,
-    hoursInMonth
-  );
-
-  const netTotalExpensesHourlyRate = getNetTotalExpensesHourlyRate(
-    hourlyRate,
-    hoursInMonth,
-    netSocEmployerTaxHourlyRate
   );
 
   return (
@@ -255,8 +173,6 @@ export const DataProvider = ({ children }) => {
         salaryTypeMonthly,
         monthSalary,
         setMonthSalary,
-        isActive,
-        setActive,
         dependentsNumber,
         setDependentsNumber,
         nonTaxMin,
@@ -267,44 +183,24 @@ export const DataProvider = ({ children }) => {
         setHoursInMonth,
         result: {
           socialTax,
-          socialTaxPensionBenef,
-          socialTaxPensionNational,
+          socialTaxName,
           socialEmployerTax,
-          socEmployerTaxBenef,
-          socEmployerTaxNational,
           incomeTax,
-          incomeTaxBenef,
-          incomeTaxNational,
-          incomeTaxDisabilityFirst,
-          incomeTaxDisabilityThird,
-          incomeTaxBenefPensDisFirst,
+          incomeTaxName,
+          incomeTaxAfter1667eur,
+          incomeTaxTill1667eur,
+          partAfter1667eur,
           nonTaxForDependents,
           totalExpenses,
-          totalExpensesBenef,
-          totalExpensesNational,
           netSalary,
-          netSalaryBenef,
-          netSalaryNational,
-          netSalaryDisabilityFirst,
-          netSalaryDisabilityThird,
-          netSalaryBenefDisFirst,
+          hourlyRateSalary,
           grossSalary,
           socialTaxGross,
           incomeTaxGross,
+          incomeTaxNameGross,
           socialEmployerTaxGross,
           totalExpensesGross,
           nonTaxMin,
-          noTaxBookIncomeTax,
-          noTaxBookIncomeTaxBenef,
-          noTaxBookIncomeTaxNational,
-          noTaxBookNetSalaryBenef,
-          noTaxBookNetSalaryNational,
-          netSalaryNoTaxBook,
-          socialTaxHourlyRateNet,
-          incomeTaxHourlyRateNet,
-          netSalaryHourlyRate,
-          netSocEmployerTaxHourlyRate,
-          netTotalExpensesHourlyRate,
         },
       }}
     >

@@ -6,7 +6,7 @@ import { DataContext } from "../../providers/CalculatorProvider";
 const Direction = () => {
   const { setDirection } = useContext(DataContext);
 
-  const bruttoNettoMode = (value) => {
+  const handleChange = () => {
     setDirection((value) => !value);
   };
 
@@ -15,7 +15,7 @@ const Direction = () => {
       <label className="direction-label">Direction</label> 
       <Radio.Group
         defaultValue="GrossNet"
-        onChange={bruttoNettoMode}
+        onChange={handleChange}
         buttonStyle="solid"
       >
         <Radio.Button value="GrossNet">Gross &gt; Net Salary</Radio.Button>
@@ -26,3 +26,14 @@ const Direction = () => {
 };
 
 export default Direction;
+
+/*
+<label className="direction-label">Direction</label> 
+<Radio.Group
+  defaultValue="GrossNet"
+  onChange={handleChange}
+  buttonStyle="solid"
+>
+  <Radio.Button value="GrossNet">Gross &gt; Net Salary</Radio.Button>
+  <Radio.Button value="NetGross">Net &gt; Gross Salary</Radio.Button>
+</Radio.Group>*/

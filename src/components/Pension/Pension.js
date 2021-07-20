@@ -5,7 +5,7 @@ import { DataContext } from "../../providers/CalculatorProvider";
 const { Option } = Select;
 
 const Pension = () => {
-  const { setPension } = useContext(DataContext);
+  const { pension, setPension } = useContext(DataContext);
 
   function onChangePension(value) {
     setPension(value);
@@ -19,7 +19,7 @@ const Pension = () => {
        
       <Select
         id="PensionSelect"
-        defaultValue="not"
+        defaultValue={pension}
         onChange={onChangePension}
         className="pension-select"
       >

@@ -1,5 +1,4 @@
 import React from "react";
-
 import AppHeader from "../AppHeader";
 import Form from "../Form";
 import ResultNet from "../ResultNet";

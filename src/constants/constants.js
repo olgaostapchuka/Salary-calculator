@@ -1,16 +1,30 @@
-const Taxes = {
-  social: 10.5,
-  socialPensionBenef: 9.76,
-  socialPensionNational: 9.25,
-  socialEmployer: 23.59,
-  socEmplPensionBenef: 21.94,
-  socEmplPensionNational: 20.77,
-  income: 20,
-  incomeFull: 23,
+const TAXES = {
+  SocialTax: {
+    not: 10.5,
+    benef: 9.76,
+    national: 9.25,
+  },
+  SocEmployerTax: {
+    not: 23.59,
+    benef: 21.94,
+    national: 20.77,
+  },
+  incomeTax: {
+    income: 20,
+    incomeFull: 23,
+  },
+  nonTaxDisability: {
+    not: 0,
+    first_second_group: 154,
+    third_group: 120,
+  },
+
+  nonTaxRepressed: {
+    amount: 154,
+  },
   businessrisk: 0.36,
-  amount: 250,
-  disability_first_second: 154,
-  disability_third: 120,
+  nonTaxForDependents: 250,
+  incomeAmount: 1667,
 };
 
-export default Taxes;
+export default TAXES;

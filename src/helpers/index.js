@@ -1,235 +1,310 @@
-import Taxes from "../constants/constants";
+import TAXES from "../constants/constants";
 
 /* Gross > Net */
-export let GrossToNet = true;
 
-export const getSocialTax = (monthSalary) => (monthSalary * Taxes.social) / 100;
+export const getSocialTax = (
+  monthSalary,
+  hourlyRate,
+  hoursInMonth,
+  pension,
+  salaryTypeMonthly
+) => {
+  if (salaryTypeMonthly) {
+    return (monthSalary * TAXES.SocialTax[pension]) / 100;
+  } else {
+    return (hourlyRate * hoursInMonth * TAXES.SocialTax[pension]) / 100;
+  }
+};
 
-export const getSocialTaxPensionBenef = (monthSalary) =>
-  (monthSalary * Taxes.socialPensionBenef) / 100;
+export const getSocialTaxName = (pension) => TAXES.SocialTax[pension];
 
-export const getSocialTaxPensionNational = (monthSalary) =>
-  (monthSalary * Taxes.socialPensionNational) / 100;
-
-export const getSocialEmployerTax = (monthSalary) =>
-  (monthSalary * Taxes.socialEmployer) / 100;
-
-export const getSocEmployerTaxBenef = (monthSalary) =>
-  (monthSalary * Taxes.socEmplPensionBenef) / 100;
-
-export const getSocEmployerTaxNational = (monthSalary) =>
-  (monthSalary * Taxes.socEmplPensionNational) / 100;
+export const getSocialEmployerTax = (
+  monthSalary,
+  pension,
+  salaryTypeMonthly,
+  hourlyRate,
+  hoursInMonth
+) => {
+  if (salaryTypeMonthly) {
+    return (monthSalary * TAXES.SocEmployerTax[pension]) / 100;
+  } else {
+    return (hourlyRate * hoursInMonth * TAXES.SocEmployerTax[pension]) / 100;
+  }
+};
 
 export const getNonTaxForDependents = (dependentsNumber) =>
-  dependentsNumber * Taxes.amount;
+  dependentsNumber * TAXES.nonTaxForDependents;
 
 export const getIncomeTax = (
   monthSalary,
   socialTax,
   nonTaxForDependents,
-  nonTaxMin
-) =>
-  ((monthSalary - socialTax - nonTaxForDependents - nonTaxMin) * Taxes.income) /
-  100;
+  nonTaxMin,
+  taxBook,
+  disability,
+  personStatus,
+  salaryTypeMonthly,
+  hourlyRate,
+  hoursInMonth
+) => {
+  if (!taxBook) {
+    if (salaryTypeMonthly) {
+      return (
+        (monthSalary * TAXES.incomeTax.incomeFull -
+          socialTax * TAXES.incomeTax.income) /
+        100
+      );
+    } else {
+      return (
+        (hourlyRate * hoursInMonth * TAXES.incomeTax.incomeFull -
+          socialTax * TAXES.incomeTax.income) /
+        100
+      );
+    }
+  } else if (!personStatus) {
+    if (salaryTypeMonthly) {
+      return (
+        ((monthSalary -
+          socialTax -
+          TAXES.nonTaxDisability[disability] -
+          nonTaxForDependents -
+          nonTaxMin) *
+          TAXES.incomeTax.income) /
+        100
+      );
+    } else {
+      return (
+        ((hourlyRate * hoursInMonth -
+          socialTax -
+          TAXES.nonTaxDisability[disability] -
+          nonTaxForDependents -
+          nonTaxMin) *
+          TAXES.incomeTax.income) /
+        100
+      );
+    }
+  } else {
+    if (salaryTypeMonthly) {
+      return (
+        ((monthSalary -
+          socialTax -
+          TAXES.nonTaxDisability[disability] -
+          nonTaxForDependents -
+          TAXES.nonTaxRepressed.amount -
+          nonTaxMin) *
+          TAXES.incomeTax.income) /
+        100
+      );
+    } else {
+      return (
+        ((hourlyRate * hoursInMonth -
+          socialTax -
+          TAXES.nonTaxDisability[disability] -
+          nonTaxForDependents -
+          TAXES.nonTaxRepressed.amount -
+          nonTaxMin) *
+          TAXES.incomeTax.income) /
+        100
+      );
+    }
+  }
+};
 
-export const getIncomeTaxBenef = (
+export const getPartAfter1667eur = (
   monthSalary,
-  socialTaxPensionBenef,
-  nonTaxForDependents,
-  nonTaxMin
-) =>
-  ((monthSalary - socialTaxPensionBenef - nonTaxForDependents - nonTaxMin) *
-    Taxes.income) /
-  100;
+  hourlyRate,
+  hoursInMonth,
+  salaryTypeMonthly
+) => {
+  if (salaryTypeMonthly) {
+    return monthSalary - TAXES.incomeAmount;
+  } else {
+    return hourlyRate * hoursInMonth - TAXES.incomeAmount;
+  }
+};
 
-export const getIncomeTaxNational = (
-  monthSalary,
-  socialTaxPensionNational,
-  nonTaxForDependents,
-  nonTaxMin
-) =>
-  ((monthSalary - socialTaxPensionNational - nonTaxForDependents - nonTaxMin) *
-    Taxes.income) /
-  100;
+export const getIncomeTaxAfter1667eur = (partAfter1667eur) => {
+  return (partAfter1667eur * TAXES.incomeTax.incomeFull) / 100;
+};
 
-export const getIncomeTaxDisabilityFirst = (
-  monthSalary,
+export const getIncomeTaxTill1667eur = (
   socialTax,
   nonTaxForDependents,
-  nonTaxMin
-) =>
-  ((monthSalary -
-    socialTax -
-    nonTaxForDependents -
-    nonTaxMin -
-    Taxes.disability_first_second) *
-    Taxes.income) /
-  100;
+  nonTaxMin,
+  disability
+) => {
+  return (
+    ((TAXES.incomeAmount -
+      socialTax -
+      TAXES.nonTaxDisability[disability] -
+      nonTaxForDependents -
+      TAXES.nonTaxRepressed.amount -
+      nonTaxMin) *
+      TAXES.incomeTax.income) /
+    100
+  );
+};
 
-export const getIncomeTaxDisabilityThird = (
+export const getIncomeTaxName = (
   monthSalary,
+  taxBook,
   socialTax,
-  nonTaxForDependents,
-  nonTaxMin
-) =>
-  ((monthSalary -
-    socialTax -
-    nonTaxForDependents -
-    nonTaxMin -
-    Taxes.disability_third) *
-    Taxes.income) /
-  100;
+  salaryTypeMonthly,
+  hourlyRate,
+  hoursInMonth
+) => {
+  if (taxBook) {
+    return TAXES.incomeTax.income;
+  } else if (salaryTypeMonthly) {
+    return (
+      monthSalary +
+      " x " +
+      TAXES.incomeTax.incomeFull +
+      "% " +
+      " - " +
+      socialTax +
+      " x " +
+      TAXES.incomeTax.income
+    );
+  } else {
+    return (
+      hourlyRate * hoursInMonth +
+      " x " +
+      TAXES.incomeTax.incomeFull +
+      "% " +
+      " - " +
+      socialTax +
+      " x " +
+      TAXES.incomeTax.income
+    );
+  }
+};
 
-export const getIncomeTaxBenefPensDisFirst = (
+export const getNetSalary = (
   monthSalary,
-  socialTaxPensionBenef,
-  nonTaxForDependents,
-  nonTaxMin
-) =>
-  ((monthSalary -
-    socialTaxPensionBenef -
-    nonTaxForDependents -
-    nonTaxMin -
-    Taxes.disability_first_second) *
-    Taxes.income) /
-  100;
+  incomeTax,
+  socialTax,
+  salaryTypeMonthly,
+  incomeTaxTill1667eur,
+  incomeTaxAfter1667eur,
+  hoursInMonth,
+  hourlyRate
+) => {
+  if (salaryTypeMonthly) {
+    if (monthSalary > TAXES.incomeAmount) {
+      return (
+        monthSalary - socialTax - incomeTaxAfter1667eur - incomeTaxTill1667eur
+      );
+    } else {
+      if (incomeTax < 0) {
+        return monthSalary - socialTax;
+      } else {
+        return monthSalary - incomeTax - socialTax;
+      }
+    }
+  } else {
+    if (hoursInMonth * hourlyRate > TAXES.incomeAmount) {
+      return (
+        hoursInMonth * hourlyRate -
+        socialTax -
+        incomeTaxAfter1667eur -
+        incomeTaxTill1667eur
+      );
+    } else {
+      return hoursInMonth * hourlyRate - socialTax - incomeTax;
+    }
+  }
+};
 
-export const getNoTaxBookIncomeTax = (monthSalary, socialTax) =>
-  (monthSalary * Taxes.incomeFull - socialTax * Taxes.income) / 100;
+export const getHourlyRateSalary = (hoursInMonth, hourlyRate) => {
+  return hoursInMonth * hourlyRate;
+};
 
-export const getNoTaxBookIncomeTaxBenef = (
+export const getTotalExpenses = (
   monthSalary,
-  socialTaxPensionBenef
-) =>
-  (monthSalary * Taxes.incomeFull - socialTaxPensionBenef * Taxes.income) / 100;
-
-export const getNoTaxBookIncomeTaxNational = (
-  monthSalary,
-  socialTaxPensionNational
-) =>
-  (monthSalary * Taxes.incomeFull - socialTaxPensionNational * Taxes.income) /
-  100;
-
-export const getTotalExpenses = (monthSalary, socialEmployerTax) =>
-  monthSalary + socialEmployerTax + Taxes.businessrisk;
-
-export const getTotalExpensesBenef = (monthSalary, socEmployerTaxBenef) =>
-  monthSalary + socEmployerTaxBenef + Taxes.businessrisk;
-
-export const getTotalExpensesNational = (monthSalary, socEmployerTaxNational) =>
-  monthSalary + socEmployerTaxNational + Taxes.businessrisk;
-
-export const getNetSalary = (monthSalary, incomeTax, socialTax) =>
-  monthSalary - incomeTax - socialTax;
-
-export const getNetSalaryNoTaxBook = (
-  monthSalary,
-  noTaxBookIncomeTax,
-  socialTax
-) => monthSalary - noTaxBookIncomeTax - socialTax;
-
-export const getNetSalaryBenef = (
-  monthSalary,
-  incomeTaxBenef,
-  socialTaxPensionBenef
-) => monthSalary - incomeTaxBenef - socialTaxPensionBenef;
-
-export const getNetSalaryNational = (
-  monthSalary,
-  incomeTaxNational,
-  socialTaxPensionNational
-) => monthSalary - incomeTaxNational - socialTaxPensionNational;
-
-export const getNetSalaryDisabilityFirst = (
-  monthSalary,
-  incomeTaxDisabilityFirst,
-  socialTax
-) => monthSalary - incomeTaxDisabilityFirst - socialTax;
-
-export const getNetSalaryDisabilityThird = (
-  monthSalary,
-  incomeTaxDisabilityThird,
-  socialTax
-) => monthSalary - incomeTaxDisabilityThird - socialTax;
-
-export const getNetSalaryBenefDisFirst = (
-  monthSalary,
-  incomeTaxBenefPensDisFirst,
-  socialTaxPensionBenef
-) => monthSalary - incomeTaxBenefPensDisFirst - socialTaxPensionBenef;
-
-export const getNoTaxBookNetSalaryBenef = (
-  monthSalary,
-  noTaxBookIncomeTaxBenef,
-  socialTaxPensionBenef
-) => monthSalary - noTaxBookIncomeTaxBenef - socialTaxPensionBenef;
-
-export const getNoTaxBookNetSalaryNational = (
-  monthSalary,
-  noTaxBookIncomeTaxNational,
-  socialTaxPensionNational
-) => monthSalary - noTaxBookIncomeTaxNational - socialTaxPensionNational;
+  socialEmployerTax,
+  salaryTypeMonthly,
+  hoursInMonth,
+  hourlyRate
+) => {
+  if (salaryTypeMonthly) {
+    return monthSalary + socialEmployerTax + TAXES.businessrisk;
+  } else {
+    return hoursInMonth * hourlyRate + socialEmployerTax + TAXES.businessrisk;
+  }
+};
 
 /* Net > Gross */
-export const getSocialTaxGross = (grossSalary) =>
-  (grossSalary * Taxes.social) / 100;
 
-export const getSocialEmployerTaxGross = (grossSalary) =>
-  (grossSalary * Taxes.socialEmployer) / 100;
+export const getSocialTaxGross = (grossSalary, pension) =>
+  (grossSalary * TAXES.SocialTax[pension]) / 100;
+
+export const getSocialEmployerTaxGross = (grossSalary, pension) =>
+  (grossSalary * TAXES.SocEmployerTax[pension]) / 100;
 
 export const getTotalExpensesGross = (grossSalary, getSocialEmployerTaxGross) =>
-  grossSalary + getSocialEmployerTaxGross + Taxes.businessrisk;
+  grossSalary + getSocialEmployerTaxGross + TAXES.businessrisk;
 
-export const getIncomeTaxGross = (
+/*export const getIncomeTaxGross = (
   grossSalary,
   socialTaxGross,
   nonTaxForDependents,
   nonTaxMin
 ) =>
   ((grossSalary - socialTaxGross - nonTaxForDependents - nonTaxMin) *
-    Taxes.income) /
-  100;
+    TAXES.incomeTax.income) /
+  100;*/
 
-export const getGrossSalary = (monthSalary) =>
-  monthSalary /
-  (1 - Taxes.social / 100 - (Taxes.income / 100) * (1 - Taxes.social / 100));
-
-/* Hourly Salary NET  */
-
-export const getHourlyRateSalaryNet = (hourlyRate, hoursInMonth) =>
-  hourlyRate * hoursInMonth;
-
-export const getSocialTaxHourlyRateNet = (hourlyRate, hoursInMonth) =>
-  (hourlyRate * hoursInMonth * Taxes.social) / 100;
-
-export const getIncomeTaxHourlyRateNet = (
-  hourlyRate,
-  hoursInMonth,
-  socialTaxHourlyRateNet,
+export const getIncomeTaxGross = (
+  grossSalary,
+  socialTaxGross,
   nonTaxForDependents,
-  nonTaxMin
-) =>
-  ((hourlyRate * hoursInMonth -
-    socialTaxHourlyRateNet -
-    nonTaxForDependents -
-    nonTaxMin) *
-    Taxes.income) /
-  100;
+  nonTaxMin,
+  taxBook
+) => {
+  if (!taxBook) {
+    return (
+      (grossSalary * TAXES.incomeTax.incomeFull -
+        socialTaxGross * TAXES.incomeTax.income) /
+      100
+    );
+  } else {
+    return (
+      ((grossSalary - socialTaxGross - nonTaxForDependents - nonTaxMin) *
+        TAXES.incomeTax.income) /
+      100
+    );
+  }
+};
 
-export const getNetSalaryHourlyRate = (
-  hourlyRate,
-  hoursInMonth,
-  incomeTaxHourlyRateNet,
-  socialTaxHourlyRateNet
-) =>
-  hourlyRate * hoursInMonth - incomeTaxHourlyRateNet - socialTaxHourlyRateNet;
+export const getIncomeTaxNameGross = (
+  monthSalary,
+  taxBook,
+  socialTaxGross,
+  pension
+) => {
+  if (taxBook) {
+    return TAXES.incomeTax.income;
+  } else {
+    return (
+      monthSalary /
+        (1 -
+          TAXES.SocialTax[pension] / 100 -
+          (TAXES.incomeTax.income / 100) *
+            (1 - TAXES.SocialTax[pension] / 100)) +
+      " x " +
+      TAXES.incomeTax.incomeFull +
+      "% " +
+      " - " +
+      socialTaxGross +
+      " x " +
+      TAXES.incomeTax.income
+    );
+  }
+};
 
-export const getNetSocEmployerTaxHourlyRate = (hourlyRate, hoursInMonth) =>
-  (hourlyRate * hoursInMonth * Taxes.socialEmployer) / 100;
-
-export const getNetTotalExpensesHourlyRate = (
-  hourlyRate,
-  hoursInMonth,
-  netSocEmployerTaxHourlyRate
-) =>
-  hourlyRate * hoursInMonth + netSocEmployerTaxHourlyRate + Taxes.businessrisk;
+export const getGrossSalary = (monthSalary, pension) =>
+  monthSalary /
+  (1 -
+    TAXES.SocialTax[pension] / 100 -
+    (TAXES.incomeTax.income / 100) * (1 - TAXES.SocialTax[pension] / 100));

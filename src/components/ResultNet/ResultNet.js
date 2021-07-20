@@ -1,20 +1,22 @@
 import React, { useContext } from "react";
 import "./resultnet.css";
 import { DataContext } from "../../providers/CalculatorProvider";
-import Taxes from "../../constants/constants";
+import TAXES from "../../constants/constants";
 
 const ResultNet = () => {
   const {
     direction,
-    salaryTypeMonthly,
+    monthSalary,
     result,
     taxBook,
-    monthSalary,
     pension,
     disability,
     personStatus,
     dependentsNumber,
+    salaryTypeMonthly,
     nonTaxMin,
+    hourlyRate,
+    hoursInMonth,
   } = useContext(DataContext);
 
   return (
@@ -24,151 +26,14 @@ const ResultNet = () => {
         <tbody>
           <tr className="row-result">
             <td>Net-Salary</td>
-            <td
-              className="row-result-eur {salaryTypeMonthly ? 'shown' : 'hidden'}"
-              colSpan="2"
-            >
-              <span
-                className={
-                  salaryTypeMonthly &&
-                  taxBook &&
-                  pension === "not" &&
-                  disability === "not" &&
-                  !personStatus
-                    ? "shown"
-                    : "hidden"
-                }
-              >
-                {result.netSalary.toFixed(2)} EUR
-              </span>
-              <span
-                className={!taxBook && pension === "not" ? "shown" : "hidden"}
-              >
-                {result.netSalaryNoTaxBook.toFixed(2)} EUR
-              </span>
-              <span
-                className={
-                  taxBook && pension === "benef" && disability === "not"
-                    ? "shown"
-                    : "hidden"
-                }
-              >
-                {result.netSalaryBenef.toFixed(2)} EUR
-              </span>
-              <span
-                className={
-                  taxBook && pension === "national" ? "shown" : "hidden"
-                }
-              >
-                {result.netSalaryNational.toFixed(2)} EUR
-              </span>
-              <span
-                className={!taxBook && pension === "benef" ? "shown" : "hidden"}
-              >
-                {result.noTaxBookNetSalaryBenef.toFixed(2)} EUR
-              </span>
-              <span
-                className={
-                  !taxBook && pension === "national" ? "shown" : "hidden"
-                }
-              >
-                {result.noTaxBookNetSalaryNational.toFixed(2)} EUR
-              </span>
-              <span
-                className={
-                  taxBook &&
-                  disability === "first_second_group" &&
-                  pension === "benef"
-                    ? "shown"
-                    : "hidden"
-                }
-              >
-                {result.netSalaryBenefDisFirst.toFixed(2)} EUR
-              </span>
-              <span
-                className={
-                  taxBook && disability === "third_group" ? "shown" : "hidden"
-                }
-              >
-                {result.netSalaryDisabilityThird.toFixed(2)} EUR
-              </span>
-              <span
-                className={
-                  taxBook && disability === "first_second_group"
-                    ? "shown"
-                    : "hidden"
-                }
-              >
-                {result.netSalaryDisabilityFirst.toFixed(2)} EUR
-              </span>
-              <span className={taxBook && personStatus ? "shown" : "hidden"}>
-                {result.netSalaryDisabilityFirst.toFixed(2)} EUR
-              </span>
-              <span className={!salaryTypeMonthly ? "shown" : "hidden"}>
-                {result.netSalaryHourlyRate.toFixed(2)} EUR
-              </span>
+            <td className="row-result-eur" colSpan="2">
+              {result.netSalary.toFixed(2)} EUR
             </td>
           </tr>
           <tr>
             <td>Social tax</td>
-            <td>
-              <span
-                className={taxBook && pension === "not" ? "shown" : "hidden"}
-              >
-                {Taxes.social}%
-              </span>
-
-              <span
-                className={taxBook && pension === "benef" ? "shown" : "hidden"}
-              >
-                {Taxes.socialPensionBenef}%
-              </span>
-
-              <span
-                className={!taxBook && pension === "not" ? "shown" : "hidden"}
-              >
-                {Taxes.social}%
-              </span>
-              <span
-                className={!taxBook && pension === "benef" ? "shown" : "hidden"}
-              >
-                {Taxes.socialPensionBenef}%
-              </span>
-              <span
-                className={
-                  taxBook && pension === "national" ? "shown" : "hidden"
-                }
-              >
-                {Taxes.socialPensionNational}%
-              </span>
-              <span
-                className={
-                  !taxBook && pension === "national" ? "shown" : "hidden"
-                }
-              >
-                {Taxes.socialPensionNational}%
-              </span>
-            </td>
-            <td className={salaryTypeMonthly ? "shown" : "hidden"}>
-              <span
-                className={
-                  pension !== "benef" && pension !== "national"
-                    ? "shown"
-                    : "hidden"
-                }
-              >
-                {result.socialTax.toFixed(2)} EUR
-              </span>
-              <span className={pension === "benef" ? "shown" : "hidden"}>
-                {result.socialTaxPensionBenef.toFixed(2)} EUR
-              </span>
-              <span className={pension === "national" ? "shown" : "hidden"}>
-                {result.socialTaxPensionNational.toFixed(2)} EUR
-              </span>
-            </td>
-            <td className={!salaryTypeMonthly ? "shown" : "hidden"}>
-              {result.socialTaxHourlyRateNet.toFixed(2)} EUR
-            </td>
+            <td>{result.socialTaxName}%</td>
+            <td>{result.socialTax.toFixed(2)} EUR</td>
           </tr>
 
           <tr
@@ -181,31 +46,13 @@ const ResultNet = () => {
           >
             <td>Non-taxable amount for disability</td>
             <td></td>
-            <td>
-              <span
-                className={
-                  taxBook && disability === "first_second_group"
-                    ? "shown"
-                    : "hidden"
-                }
-              >
-                {Taxes.disability_first_second} EUR
-              </span>
-
-              <span
-                className={
-                  taxBook && disability === "third_group" ? "shown" : "hidden"
-                }
-              >
-                {Taxes.disability_third} EUR
-              </span>
-            </td>
+            <td>{TAXES.nonTaxDisability[disability]} EUR</td>
           </tr>
 
           <tr className={taxBook && personStatus ? "shown" : "hidden"}>
             <td>Non-taxable amount for repression person</td>
             <td></td>
-            <td>{Taxes.disability_first_second} EUR</td>
+            <td>{TAXES.nonTaxRepressed.amount} EUR</td>
           </tr>
 
           <tr className={taxBook && nonTaxMin ? "shown" : "hidden"}>
@@ -215,228 +62,78 @@ const ResultNet = () => {
               {result.nonTaxMin ? result.nonTaxMin.toFixed(2) : "0.00"} EUR
             </td>
           </tr>
+
           <tr className={taxBook && dependentsNumber ? "shown" : "hidden"}>
             <td>Non-taxable amount for dependents</td>
-            <td>{dependentsNumber + " x " + Taxes.amount}</td>
+            <td>{dependentsNumber + " x " + TAXES.nonTaxForDependents}</td>
             <td>{result.nonTaxForDependents.toFixed(2)} EUR</td>
           </tr>
-          <tr>
+
+          <tr
+            data-marker=""
+            className={
+              (monthSalary < TAXES.incomeAmount && salaryTypeMonthly) ||
+              (hourlyRate * hoursInMonth < TAXES.incomeAmount &&
+                !salaryTypeMonthly)
+                ? "shown"
+                : "hidden"
+            }
+          >
             <td>Personal income tax</td>
+            <td>{result.incomeTaxName}%</td>
+
             <td>
-              <span className={taxBook ? "shown" : "hidden"}>
-                {Taxes.income}%
-              </span>
-              <span
-                className={!taxBook && pension === "not" ? "shown" : "hidden"}
-              >
-                {monthSalary +
-                  " x " +
-                  Taxes.incomeFull +
-                  " - " +
-                  result.socialTax.toFixed(2) +
-                  " x " +
-                  Taxes.income}
-                %
-              </span>
-              <span
-                className={!taxBook && pension === "benef" ? "shown" : "hidden"}
-              >
-                {monthSalary +
-                  " x " +
-                  Taxes.incomeFull +
-                  "%" +
-                  " - " +
-                  result.socialTaxPensionBenef.toFixed(2) +
-                  " x " +
-                  Taxes.income}
-                %
-              </span>
-              <span
-                className={
-                  !taxBook && pension === "national" ? "shown" : "hidden"
-                }
-              >
-                {monthSalary +
-                  " x " +
-                  Taxes.incomeFull +
-                  "%" +
-                  " - " +
-                  result.socialTaxPensionNational.toFixed(2) +
-                  " x " +
-                  Taxes.income}
-                %
-              </span>
+              {result.incomeTax.toFixed(2) > 0
+                ? result.incomeTax.toFixed(2)
+                : 0}
+              EUR
             </td>
+          </tr>
 
-            <td className={salaryTypeMonthly ? "shown" : "hidden"}>
-              <span
-                className={
-                  taxBook &&
-                  pension === "not" &&
-                  disability === "not" &&
-                  !personStatus
-                    ? "shown"
-                    : "hidden"
-                }
-              >
-                {result.incomeTax.toFixed(2)} EUR
-              </span>
-              <span
-                className={!taxBook && pension === "not" ? "shown" : "hidden"}
-              >
-                {result.noTaxBookIncomeTax.toFixed(2)} EUR
-              </span>
-              <span
-                className={
-                  taxBook &&
-                  pension === "benef" &&
-                  disability !== "first_second_group"
-                    ? "shown"
-                    : "hidden"
-                }
-              >
-                {result.incomeTaxBenef.toFixed(2)} EUR
-              </span>
-              <span
-                className={!taxBook && pension === "benef" ? "shown" : "hidden"}
-              >
-                {result.noTaxBookIncomeTaxBenef.toFixed(2)} EUR
-              </span>
-              <span
-                className={
-                  taxBook && pension === "national" ? "shown" : "hidden"
-                }
-              >
-                {result.incomeTaxNational.toFixed(2)} EUR
-              </span>
-              <span
-                className={
-                  !taxBook && pension === "national" ? "shown" : "hidden"
-                }
-              >
-                {result.noTaxBookIncomeTaxNational.toFixed(2)} EUR
-              </span>
-              <span
-                className={
-                  taxBook &&
-                  disability === "first_second_group" &&
-                  pension !== "benef"
-                    ? "shown"
-                    : "hidden"
-                }
-              >
-                {result.incomeTaxDisabilityFirst.toFixed(2)} EUR
-              </span>
-              <span
-                className={
-                  taxBook && disability === "third_group" ? "shown" : "hidden"
-                }
-              >
-                {result.incomeTaxDisabilityThird.toFixed(2)} EUR
-              </span>
-              <span
-                className={
-                  taxBook &&
-                  disability === "first_second_group" &&
-                  pension === "benef"
-                    ? "shown"
-                    : "hidden"
-                }
-              >
-                {result.incomeTaxBenefPensDisFirst.toFixed(2)} EUR
-              </span>
-              <span className={taxBook && personStatus ? "shown" : "hidden"}>
-                {result.incomeTaxDisabilityFirst.toFixed(2)} EUR
-              </span>
-            </td>
+          <tr
+            className={
+              monthSalary > TAXES.incomeAmount ||
+              hourlyRate * hoursInMonth > TAXES.incomeAmount
+                ? "shown"
+                : "hidden"
+            }
+          >
+            <td>Personal income tax from income till 1667 EUR</td>
+            <td>{result.incomeTaxName}%</td>
 
-            <td className={!salaryTypeMonthly ? "shown" : "hidden"}>
-              {result.incomeTaxHourlyRateNet.toFixed(2)} EUR
+            <td>{result.incomeTaxTill1667eur.toFixed(2)} EUR</td>
+          </tr>
+
+          <tr
+            className={
+              monthSalary > TAXES.incomeAmount ||
+              hourlyRate * hoursInMonth > TAXES.incomeAmount
+                ? "shown"
+                : "hidden"
+            }
+          >
+            <td>
+              Personal income tax ( {result.partAfter1667eur} EUR) , from part
+              after 1667 EUR
             </td>
+            <td>{TAXES.incomeTax.incomeFull}%</td>
+            <td>{result.incomeTaxAfter1667eur.toFixed(2)} EUR</td>
           </tr>
           <tr>
             <td>Social tax, employer's part</td>
-            <td>
-              <span
-                className={
-                  taxBook && pension !== "benef" && pension !== "national"
-                    ? "shown"
-                    : "hidden"
-                }
-              >
-                {Taxes.socialEmployer}%
-              </span>
-              <span
-                className={taxBook && pension === "benef" ? "shown" : "hidden"}
-              >
-                {Taxes.socEmplPensionBenef}%
-              </span>
-              <span
-                className={
-                  taxBook && pension === "national" ? "shown" : "hidden"
-                }
-              >
-                {Taxes.socEmplPensionNational}%
-              </span>
-              <span
-                className={
-                  !taxBook && pension === "national" ? "shown" : "hidden"
-                }
-              >
-                {Taxes.socEmplPensionNational}%
-              </span>
-            </td>
+            <td>{TAXES.SocEmployerTax[pension]}%</td>
 
-            <td className={salaryTypeMonthly ? "shown" : "hidden"}>
-              <span
-                className={
-                  pension !== "benef" && pension !== "national"
-                    ? "shown"
-                    : "hidden"
-                }
-              >
-                {result.socialEmployerTax.toFixed(2)} EUR
-              </span>
-              <span className={pension === "benef" ? "shown" : "hidden"}>
-                {result.socEmployerTaxBenef.toFixed(2)} EUR
-              </span>
-              <span className={pension === "national" ? "shown" : "hidden"}>
-                {result.socEmployerTaxNational.toFixed(2)} EUR
-              </span>
-            </td>
-
-            <td className={!salaryTypeMonthly ? "shown" : "hidden"}>
-              {result.netSocEmployerTaxHourlyRate.toFixed(2)} EUR
-            </td>
+            <td>{result.socialEmployerTax.toFixed(2)} EUR</td>
           </tr>
           <tr>
             <td>Business risk fee</td>
             <td></td>
-            <td>{Taxes.businessrisk} EUR</td>
+            <td>{TAXES.businessrisk} EUR</td>
           </tr>
           <tr>
             <td>Total employer's expenses</td>
             <td></td>
-            <td className={salaryTypeMonthly ? "shown" : "hidden"}>
-              <span
-                className={
-                  pension !== "benef" && pension !== "national"
-                    ? "shown"
-                    : "hidden"
-                }
-              >
-                {result.totalExpenses.toFixed(2)} EUR
-              </span>
-              <span className={pension === "benef" ? "shown" : "hidden"}>
-                {result.totalExpensesBenef.toFixed(2)} EUR
-              </span>
-              <span className={pension === "national" ? "shown" : "hidden"}>
-                {result.totalExpensesNational.toFixed(2)} EUR
-              </span>
-            </td>
-            <td className={!salaryTypeMonthly ? "shown" : "hidden"}>
-              {result.netTotalExpensesHourlyRate.toFixed(2)} EUR
-            </td>
+            <td>{result.totalExpenses.toFixed(2)} EUR</td>
           </tr>
         </tbody>
       </table>

@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./dependents.css";
-import "antd/dist/antd.css";
+
 import { InputNumber } from "antd";
+import { DataContext } from "../../providers/CalculatorProvider";
 
 const Dependents = () => {
+  const { dependentsNumber, setDependentsNumber } = useContext(DataContext);
   return (
     <div className="dependents">
       <label className="dependents-label" htmlFor="dependentInput">
@@ -13,10 +15,21 @@ const Dependents = () => {
         id="dependentInput"
         min={1}
         max={10000}
-        defaultValue={null}
+        defaultValue={dependentsNumber}
+        onChange={setDependentsNumber}
       />
     </div>
   );
 };
 
 export default Dependents;
+
+/*<Formfield label="Number of dependents" id="dependentInput">      
+<InputNumber
+        id="dependentInput"
+        min={1}
+        max={10000}
+        defaultValue={dependentsNumber}
+        onChange={setDependentsNumber}
+      /></Formfield>
+*/

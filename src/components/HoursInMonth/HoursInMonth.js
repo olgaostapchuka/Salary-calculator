@@ -14,7 +14,7 @@ const HoursInMonth = () => {
       <InputNumber
         id="hoursInMonthInput"
         min={1}
-        max={10000}
+        max={744}
         defaultValue={hoursInMonth}
         onChange={setHoursInMonth}
       />

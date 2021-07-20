@@ -1,7 +1,6 @@
 import React from "react";
 import Direction from "../Direction";
 import SalaryType from "../SalaryType";
-import MonthSalary from "../MonthSalary";
 import TaxBook from "../TaxBook";
 import Dependents from "../Dependents";
 import NonTaxMin from "../NonTaxMin";

@@ -1,2 +1,2 @@
-import Taxes from "./constants";
-export default Taxes;
+import TAXES from "./constants";
+export default TAXES;

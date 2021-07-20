@@ -3,10 +3,10 @@ import "./taxbook.css";
 import { Checkbox } from "antd";
 import { DataContext } from "../../providers/CalculatorProvider";
 
-const TaxBook = () => {
+export const TaxBook = () => {
   const { setTaxBook } = useContext(DataContext);
 
-  const enableTaxBook = (value) => {
+  const enableTaxBook = () => {
     setTaxBook((value) => !value);
   };
 

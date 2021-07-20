@@ -6,7 +6,7 @@ import { DataContext } from "../../providers/CalculatorProvider";
 const PersonStatus = () => {
   const { setPersonStatus } = useContext(DataContext);
 
-  const enablePersonStatus = (value) => {
+  const handlePersonStatus = () => {
     setPersonStatus((value) => !value);
   };
   return (
@@ -14,7 +14,7 @@ const PersonStatus = () => {
       <Checkbox
         id="personStatus"
         defaultChecked={false}
-        onChange={enablePersonStatus}
+        onChange={handlePersonStatus}
       />
       <label className="person-status-label" htmlFor="personStatus">
         Politically repressed person or national resistance movement status
